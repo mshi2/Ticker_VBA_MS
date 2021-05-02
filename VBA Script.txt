@@ -1,0 +1,86 @@
+
+Sub Stock_data()
+  
+   
+    'Set an initial variable for holding ticker symbol
+    Dim Ticker As String
+  
+     'Set variables
+    Dim Ticker_Start As Double
+    Dim Ticker_End As Double
+    Dim Yearly_Change As Double
+    Dim Total_Volume As Double
+    Dim Percent_Change As Double
+  
+  
+      
+    'Keep track of the location for each ticker in the summary table
+    Dim Ticker_Row As Integer
+    Ticker_Row = 2
+
+        
+    ' Loop through all ticker symbols
+    For i = 2 To Cells(Rows.Count, 1).End(xlUp).Row
+  
+        'Ticker start value
+        If Cells(i, 1).Value <> Cells(i - 1, 1).Value Then
+        Ticker_Start = Cells(i, 3).Value
+                        
+        End If
+        
+        'Add to the Total Volume
+        Total_Volume = Total_Volume + Cells(i, 7).Value
+                          
+        
+        ' Check if we are still within the same ticker, if it is not...
+        If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+          
+        
+        'Set the Ticker Name
+        Ticker = Cells(i, 1).Value
+      
+        'Print the Ticker Name in the Summary Table
+        Range("I" & Ticker_Row).Value = Ticker
+      
+        'Ticker end value
+        Ticker_End = Cells(i, 6).Value
+            
+        'Yearly Change value
+        Yearly_Change = Ticker_End - Ticker_Start
+      
+        'Yearly change table
+        Range("J" & Ticker_Row).Value = Yearly_Change
+                                    
+                
+          'Print the Total Volume in the Summary Table
+        Range("L" & Ticker_Row).Value = Total_Volume
+        
+        ' Reset The Total Volume
+        Total_Volume = 0
+            
+            'Percentage change
+            If Yearly_Change <> 0 And Ticker_Start <> 0 Then
+            Percent_Change = Yearly_Change / Ticker_Start
+            End If
+                   
+         
+        'Percentage Change table
+        Range("K" & Ticker_Row).Value = Percent_Change
+        Range("K" & Ticker_Row).NumberFormat = "0.00%"
+        
+        'Color Code for positive or negative change
+        If Yearly_Change >= 0 Then
+        Range("J" & Ticker_Row).Interior.ColorIndex = 4
+        Else
+        Range("J" & Ticker_Row).Interior.ColorIndex = 3
+        
+        End If
+        
+        ' Add one to the summary table row
+        Ticker_Row = Ticker_Row + 1
+        
+     End If
+         
+   Next i
+    
+End Sub
